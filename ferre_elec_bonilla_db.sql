@@ -127,7 +127,7 @@ CREATE TABLE productos (
     precio_base_venta DECIMAL(15,2) NOT NULL,
     costo_promedio_ponderado DECIMAL(15,2) DEFAULT 0,
     stock_minimo_alerta INT DEFAULT 5,
-    imagen_principal VARCHAR(255),
+    imagen_principal MEDIUMBLOB,
     es_venta_fraccionada BOOLEAN DEFAULT FALSE,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_categoria) REFERENCES categorias(id_categoria),
@@ -275,48 +275,3 @@ BEGIN
     END IF;
 END //
 DELIMITER ;
-
--- ==========================================
--- 8. DATOS INICIALES
--- ==========================================
-
-INSERT INTO estados (nombre_estado, descripcion, color_representativo) VALUES 
-('Activo', 'Entidad operativa', '#28a745'),
-('Pendiente', 'En proceso', '#ffc107'),
-('Anulado', 'Sin validez', '#dc3545');
-
-INSERT INTO departamentos VALUES (1,'41','Huila');
-
-INSERT INTO ciudades VALUES 
-(1,1,'41396','La Plata'),
-(2,1,'41791','Tesalia');
-
-INSERT INTO tipos_documento (sigla, nombre_completo) VALUES 
-('CC','Cédula de Ciudadanía'),
-('NIT','Número de Identificación Tributaria');
-
-INSERT INTO tasas_iva (porcentaje, descripcion) VALUES 
-(0.00,'Exento'),
-(5.00,'Reducido'),
-(19.00,'General');
-
-INSERT IGNORE INTO unidades_medida (nombre_unidad, sigla_dian) VALUES
-('Unidad', 'H87'),       -- Tornillos, herramientas, etc.
-('Metro', 'MTR'),        -- Tubos, cables, mangueras
-('Centímetro', 'CMT'),   -- Medidas pequeñas
-('Kilogramo', 'KGM'),    -- Clavos, cemento, materiales
-('Gramo', 'GRM'),        -- Tornillería pequeña
-('Litro', 'LTR'),        -- Pintura, químicos
-('Galón', 'GLL'),        -- Pintura grande
-('Caja', 'BX'),          -- Tornillos por caja
-('Paquete', 'PA'),       -- Bolsas o kits pequeños
-('Metro cuadrado', 'MTK'); -- Cerámica, pisos
-
-INSERT INTO bodegas (id_ciudad, nombre_bodega) VALUES 
-(2,'Sede Principal Tesalia');
-
-INSERT INTO roles (nombre_rol, descripcion) VALUES 
-('Administrador','Control total'),
-('Vendedor POS','Ventas'),
-('Almacenista','Inventario'),
-('Cliente','Comprador web');
