@@ -517,3 +517,154 @@ DELIMITER ;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+------------------------------------------------------DATOS DE PRUEBA-------------------------------------------------------------
+---observe que en la terminal de XAMPP las letras con tilde las imprime con este signo ?
+-- Insertar departamentos de prueba
+INSERT INTO `ferrelectricos_bonilla_berlin`.`departamentos` (`codigo_dane_dep`, `nombre_departamento`) VALUES
+('05', 'ANTIOQUIA'),
+('11', 'CUNDINAMARCA'),
+('76', 'VALLE DEL CAUCA'),
+('08', 'ATLÁNTICO'),
+('68', 'SANTANDER');
+
+-- Insertar ciudades de prueba (relacionadas con los departamentos anteriores)
+INSERT INTO `ferrelectricos_bonilla_berlin`.`ciudades` (`id_departamento`, `codigo_dane_mun`, `nombre_ciudad`) VALUES
+-- Antioquia
+(1, '05001', 'MEDELLIN'),
+(1, '05002', 'ABEJORRAL'),
+(1, '05004', 'ABRIAQUÍ'),
+-- Cundinamarca
+(2, '11001', 'BOGOTA D.C.'),
+(2, '11228', 'FUNZA'),
+(2, '11232', 'GIRARDOT'),
+-- Valle del Cauca
+(3, '76001', 'CALI'),
+(3, '76109', 'BUENAVENTURA'),
+(3, '76233', 'PALMIRA'),
+-- Atlántico
+(4, '08001', 'BARRANQUILLA'),
+(4, '08078', 'SOLEDAD'),
+(4, '08128', 'MALAMBO'),
+-- Santander
+(5, '68001', 'BUCARAMANGA'),
+(5, '68013', 'BARRANCABERMEJA'),
+(5, '68179', 'FLORIDABLANCA');
+
+-- 1. Inserción de estados comunes del sistema
+INSERT INTO `ferrelectricos_bonilla_berlin`.`estados` (`nombre_estado`, `descripcion`, `color_representativo`) VALUES
+('Activo', 'Registro activo y operativo', '#28A745'),
+('Inactivo', 'Registro deshabilitado temporalmente', '#DC3545'),
+('Proceso', 'En tramite o pendiente', '#FFC107'),
+('Anulado', 'Registro anulado o cancelado', '#6C757D'),
+('Finalizado', 'Proceso completado exitosamente', '#17A2B8');
+
+-- 2. Inserción de tipos de documento de identificación
+INSERT INTO `ferrelectricos_bonilla_berlin`.`tipos_documento` (`sigla`, `nombre_completo`) VALUES
+('CC', 'Cedula de Ciudadania'),
+('NIT', 'Numero de Identificacion Tributaria'),
+('CE', 'Cedula de Extranjeria'),
+('Pas', 'Pasaporte'),
+('TI', 'Tarjeta de Identidad');
+
+-- 3. Inserción de roles del sistema
+INSERT INTO `ferrelectricos_bonilla_berlin`.`roles` (`nombre_rol`, `descripcion`) VALUES
+('Administrador', 'Acceso total a configuración y gestion del sistema'),
+('Vendedor', 'Gestion de pedidos, cotizaciones y atención al cliente'),
+('Cliente', 'Consulta de productos, compras en linea y seguimiento de pedidos'),
+('Bodeguero', 'Gestion de inventarios, movimientos kardex y traslados'),
+('Contador', 'Acceso a reportes financieros y facturación');
+
+-- 4. Inserción de unidades de medida (basadas en resolución DIAN)
+INSERT INTO `ferrelectricos_bonilla_berlin`.`unidades_medida` (`nombre_unidad`, `sigla_dian`) VALUES
+('Unidad', 'UND'),
+('Metro', 'MT'),
+('Kilogramo', 'KG'),
+('Litro', 'LT'),
+('Par', 'PR');
+
+-- 5. Inserción de tasas de IVA aplicables en Colombia
+INSERT INTO `ferrelectricos_bonilla_berlin`.`tasas_iva` (`porcentaje`, `descripcion`) VALUES
+(19.00, 'Tarifa general'),
+(5.00, 'Tarifa reducida (canasta familiar)'),
+(0.00, 'Exento'),
+(14.00, 'Servicios financieros'),
+(8.00, 'Algunos productos agropecuarios');
+
+-- 1. Insertar categorías de prueba (jerarquía simple)
+INSERT INTO `ferrelectricos_bonilla_berlin`.`categorias` (`nombre_categoria`, `id_padre`, `id_estado`) VALUES
+('Material Electrico', NULL, 1),      -- id_categoria = 1
+('Cables y Alambres', 1, 1),          -- id_categoria = 2
+('Tomacorrientes', 1, 1),             -- id_categoria = 3
+('Interruptores', 1, 1),              -- id_categoria = 4
+('Herramientas Manuales', NULL, 1);   -- id_categoria = 5
+
+-- 2. Insertar productos de prueba
+INSERT INTO `ferrelectricos_bonilla_berlin`.`productos` (
+    `sku_interno`, 
+    `codigo_barras`, 
+    `nombre_producto`, 
+    `descripcion_corta`, 
+    `descripcion_larga`, 
+    `id_categoria`, 
+    `id_unidad`, 
+    `id_iva`, 
+    `id_estado`, 
+    `precio_base_venta`, 
+    `costo_promedio_ponderado`, 
+    `stock_minimo_alerta`, 
+    `es_venta_fraccionada`
+) VALUES
+('CAB-12-100', '7701234567890', 'Cable THHN 12 AWG 100m', 'Cable electrico THHN calibre 12, rollo 100 metros', 'Cable de cobre para instalaciones electricas residenciales e industriales, aislamiento THHN, 600V', 2, 2, 1, 1, 185000.00, 168000.00, 10, 0),
+('TOM-DBL-10', '7701234567891', 'Tomacorriente Doble 10A', 'Tomacorriente doble polarizado, 10 amperios', 'Base de tomacorriente doble con puesta a tierra, 10A/250V, color blanco', 3, 1, 1, 1, 8500.00, 6200.00, 15, 0),
+('INT-SEN-1', '7701234567892', 'Interruptor Sencillo 10A', 'Interruptor sencillo tipo palanca, 10A', 'Interruptor unipolar, 10A/250V, mecanismo de palanca, color blanco', 4, 1, 1, 1, 6200.00, 4800.00, 15, 0),
+('CAB-14-50', '7701234567893', 'Cable THHN 14 AWG 50m', 'Cable THHN calibre 14, rollo 50 metros', 'Cable de cobre flexible, aislamiento THHN, adecuado para circuitos secundarios', 2, 2, 1, 1, 72000.00, 65500.00, 8, 0),
+('DES-PEL-1', '7701234567894', 'Destornillador Electrico', 'Juego de destornillador eléctrico recargable 3.6V', 'Destornillador inalámbrico con batería Li-Ion, incluye 6 puntas intercambiables', 5, 1, 2, 1, 65000.00, 52000.00, 5, 0);
+
+-- Insertar usuarios de prueba (contraseñas: 'password123' para todos, hasheadas con SHA2-256)
+INSERT INTO `ferrelectricos_bonilla_berlin`.`usuarios` (
+    `id_rol`, 
+    `id_estado`, 
+    `id_tipo_doc`, 
+    `numero_identificacion`, 
+    `nombres`, 
+    `apellidos`, 
+    `email`, 
+    `contrasena_hash`, 
+    `telefono`
+) VALUES
+-- Administrador (rol 1, estado activo 1, tipo doc CC 1)
+(1, 1, 1, '12345678', 'Juan', 'Perez', 'juan.perez@empresa.com', SHA2('password123', 256), '3001234567'),
+
+-- Vendedor (rol 2, estado activo 1, tipo doc CC 1)
+(2, 1, 1, '87654321', 'María', 'Gomez', 'maria.gomez@empresa.com', SHA2('password123', 256), '3109876543'),
+
+-- Cliente (rol 3, estado activo 1, tipo doc CC 1)
+(3, 1, 1, '11223344', 'Carlos', 'Lopez', 'carlos.lopez@gmail.com', SHA2('password123', 256), '3201122334'),
+
+-- Bodeguero (rol 4, estado activo 1, tipo doc CC 1)
+(4, 1, 1, '44332211', 'Ana', 'Martinez', 'ana.martinez@empresa.com', SHA2('password123', 256), '3154433221'),
+
+-- Contador (rol 5, estado inactivo 2, tipo doc NIT 2)
+(5, 2, 2, '900123456', 'Luis', 'Rodriguez', 'luis.rodriguez@empresa.com', SHA2('password123', 256), '3119988776');
+
+-- Insertar bodegas (si no existen)
+INSERT INTO `ferrelectricos_bonilla_berlin`.`bodegas` 
+(`id_ciudad`, `nombre_bodega`, `direccion`, `es_punto_venta`, `id_estado`) 
+VALUES 
+(1, 'Bodega Principal Medellin', 'Calle 50 # 70-20', 1, 1),
+(4, 'Centro de Distribución Bogota', 'Av. Caracas # 45-78', 1, 1);
+
+-- Insertar resolución de facturación (asignada a una bodega)
+INSERT INTO `ferrelectricos_bonilla_berlin`.`resoluciones_facturacion` 
+(`numero_resolucion`, `prefijo`, `consecutivo_desde`, `consecutivo_hasta`, `consecutivo_actual`, 
+ `fecha_inicio`, `fecha_fin`, `clave_tecnica_dian`, `id_bodega_asignada`, `id_estado`) 
+VALUES 
+('RESOL-001', 'FER', 1000, 2000, 1005, '2025-01-01', '2025-12-31', 'clave_dian_123', 1, 1);
+
+-- Insertar pedido de prueba (cliente: Carlos López, vendedor: María Gómez)
+INSERT INTO `ferrelectricos_bonilla_berlin`.`pedidos` 
+(`id_usuario_cliente`, `id_usuario_vendedor`, `id_resolucion`, `id_estado`, `numero_comprobante`, 
+ `tipo_documento`, `origen`, `subtotal`, `total_iva`, `total_retenciones`, `total_neto`, `cufe_dian`) 
+VALUES 
+(3, 2, 1, 5, 'FER1005', 'Factura', 'Tienda', 185000.00, 35150.00, 0.00, 220150.00, 'cufe_muestra_123');
